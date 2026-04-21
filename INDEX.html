@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kochabend Spiel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #faf8f3;
+            --bg-warm: #f5efe6;
+            --text-dark: #2c2416;
+            --text-medium: #5a4d3a;
+            --accent-terracotta: #d47366;
+            --accent-olive: #8c9a7e;
+            --accent-mustard: #d9a441;
+            --border-light: #e8dfc8;
+            --shadow: rgba(44, 36, 22, 0.08);
+            --shadow-strong: rgba(44, 36, 22, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            background: var(--bg-cream);
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(212, 115, 102, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(140, 154, 126, 0.05) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--text-medium);
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .decorative-line {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--accent-terracotta), transparent);
+            margin: 1.5rem auto;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 
+                0 2px 8px var(--shadow),
+                0 8px 24px var(--shadow);
+            border: 1px solid var(--border-light);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent-terracotta), var(--accent-mustard), var(--accent-olive));
+        }
+
+        .alphabet-display {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .current-letter {
+            font-family: 'Crimson Pro', serif;
+            font-size: 8rem;
+            font-weight: 700;
+            color: var(--accent-terracotta);
+            line-height: 1;
+            text-shadow: 0 4px 12px rgba(212, 115, 102, 0.2);
+            margin-bottom: 0.5rem;
+            display: inline-block;
+            animation: letterPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes letterPop {
+            0% {
+                transform: scale(0.5) rotate(-5deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1) rotate(2deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .letter-label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 500;
+        }
+
+        .current-category {
+            text-align: center;
+            padding: 2rem;
+            background: var(--bg-warm);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border: 2px solid var(--border-light);
+            transition: all 0.3s ease;
+        }
+
+        .current-category .category-label {
+            font-size: 0.8rem;
+            color: var(--text-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .current-category .category-name {
+            font-family: 'Crimson Pro', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--accent-olive);
+            animation: categoryPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes categoryPop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .roll-button {
+            width: 100%;
+            padding: 1.25rem 2rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            font-family: 'Jost', sans-serif;
+            color: white;
+            background: linear-gradient(135deg, var(--accent-terracotta) 0%, #c96557 100%);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 4px 12px rgba(212, 115, 102, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .roll-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 20px rgba(212, 115, 102, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .roll-button:active {
+            transform: translateY(0);
+        }
+
+        .roll-button.rolling {
+            animation: rolling 0.1s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rolling {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-2px); }
+            75% { transform: translateX(2px); }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem 1rem;
+            color: var(--text-medium);
+            font-size: 0.875rem;
+        }
+
+        .footer a {
+            color: var(--accent-terracotta);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: var(--accent-mustard);
+        }
+
+        .spice-icon {
+            position: absolute;
+            opacity: 0.03;
+            font-size: 12rem;
+            pointer-events: none;
+        }
+
+        .spice-icon.top-right {
+            top: -3rem;
+            right: -3rem;
+            transform: rotate(15deg);
+        }
+
+        .spice-icon.bottom-left {
+            bottom: -3rem;
+            left: -3rem;
+            transform: rotate(-15deg);
+        }
+
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .current-letter {
+                font-size: 6rem;
+            }
+
+            .current-category .category-name {
+                font-size: 1.5rem;
+            }
+            
+            .game-card {
+                padding: 1.75rem;
+            }
+            
+            body {
+                padding: 1rem 0.75rem;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-cream: #1a1612;
+                --bg-warm: #25211c;
+                --text-dark: #f5efe6;
+                --text-medium: #c4b5a0;
+                --border-light: #3a342a;
+                --shadow: rgba(0, 0, 0, 0.3);
+                --shadow-strong: rgba(0, 0, 0, 0.5);
+            }
+
+            .game-card {
+                background: #211d18;
+            }
+
+            .current-category {
+                background: #2a2520;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Kochabend</h1>
+            <div class="decorative-line"></div>
+            <p class="subtitle">Das kulinarische Spiel</p>
+        </header>
+
+        <div class="game-card">
+            <div class="spice-icon top-right">🌿</div>
+            <div class="spice-icon bottom-left">🍴</div>
+            
+            <div class="alphabet-display">
+                <div class="current-letter" id="letterDisplay">A</div>
+                <span class="letter-label">Aktueller Buchstabe</span>
+            </div>
+
+            <div class="current-category" id="categoryDisplay">
+                <div class="category-label">Kategorie</div>
+                <div class="category-name" id="currentCategoryName">Zutat</div>
+            </div>
+
+            <button class="roll-button" id="rollButton" onclick="roll()">
+                Würfeln
+            </button>
+        </div>
+
+        <footer class="footer">
+            <p>Viel Spaß beim Kochen & Spielen! 🍽️</p>
+        </footer>
+    </div>
+
+    <script>
+        // Kochabend-spezifische Kategorien
+        const categories = [
+            { id: 1, name: 'Zutat' },
+            { id: 2, name: 'Gewürz oder Kraut' },
+            { id: 3, name: 'Gericht' },
+            { id: 4, name: 'Küchengerät' },
+            { id: 5, name: 'Garverfahren' },
+            { id: 6, name: 'Gemüse' },
+            { id: 7, name: 'Obstsorte' },
+            { id: 8, name: 'Käsesorte' },
+            { id: 9, name: 'Kochbuchautor/Koch' },
+            { id: 10, name: 'Restaurant' },
+            { id: 11, name: 'Cocktail oder Getränk' },
+            { id: 12, name: 'Dessert' }
+        ];
+
+        // Alphabet ohne schwierige Buchstaben
+        const alphabet = 'ABCDEFGHIJKLMNOPRSTUVWZ'.split('');
+        
+        let currentLetter = 'A';
+        let currentCategory = categories[0];
+
+        // Initialisierung
+        function init() {
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('letterDisplay').textContent = currentLetter;
+            document.getElementById('currentCategoryName').textContent = currentCategory.name;
+        }
+
+        function roll() {
+            const button = document.getElementById('rollButton');
+            const letterEl = document.getElementById('letterDisplay');
+            const categoryEl = document.getElementById('currentCategoryName');
+            
+            button.classList.add('rolling');
+            button.textContent = 'Würfelt...';
+            
+            let iterations = 0;
+            const maxIterations = 20;
+            
+            const interval = setInterval(() => {
+                const randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+                const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+                
+                letterEl.textContent = randomLetter;
+                categoryEl.textContent = randomCategory.name;
+                iterations++;
+                
+                if (iterations >= maxIterations) {
+                    clearInterval(interval);
+                    currentLetter = randomLetter;
+                    currentCategory = randomCategory;
+                    
+                    // Animationen triggern
+                    letterEl.style.animation = 'none';
+                    categoryEl.style.animation = 'none';
+                    setTimeout(() => {
+                        letterEl.style.animation = '';
+                        categoryEl.style.animation = '';
+                    }, 10);
+                    
+                    button.classList.remove('rolling');
+                    button.textContent = 'Würfeln';
+                }
+            }, 80);
+        }
+
+        // App starten
+        init();
+    </script>
+</body>
+</html>
